@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import AVFoundation
 
 let kScreenWidth = UIScreen.main.bounds.size.width
 let  kScreenHeight = UIScreen.main.bounds.size.height
@@ -39,8 +39,24 @@ class ViewController: UIViewController {
             return;
         }
         
-        let vc = CameraViewController()
-        self.present(vc, animated: true, completion: nil)
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        if status == .restricted || status == .denied {
+            
+            let alert = UIAlertController(title: "请授权相机权限", message: "请在iPhone的\"设置-隐私-相机\"选项中,允许访问您的相机", preferredStyle: .alert)
+            let action = UIAlertAction(title: "好的", style: .cancel) { (alert) in
+                
+            }
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+            return
+            
+        } else {
+            
+            let vc = CameraViewController()
+            self.present(vc, animated: true, completion: nil)
+        }
+        
+     
     }
     
     override func didReceiveMemoryWarning() {
